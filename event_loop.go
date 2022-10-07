@@ -65,17 +65,17 @@ func (el *eventLoop) activeReactor() {
 func (el *eventLoop) onConnect(c *conn) error {
 	var err error
 	//注册读事件
-	if err = el.poller.AddRead(c.pollAttachment); err != nil {
+	if err = el.poller.AddReadWrite(c.pollAttachment); err != nil {
 		return err
 	}
 	el.connections[c.fd] = c
-	return el.open(c)
+	return el.eh.OnConnect(el.ctx, c)
 }
 
-func (el *eventLoop) open(c *conn) error {
-	//注册写事件
-	return el.poller.AddWrite(c.pollAttachment)
-}
+//func (el *eventLoop) open(c *conn) error {
+//	//注册写事件
+//	return el.poller.AddWrite(c.pollAttachment)
+//}
 
 func (el *eventLoop) onRead(c *conn) error {
 	n, err := unix.Read(c.fd, el.buf)

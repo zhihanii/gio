@@ -10,6 +10,8 @@ type Conn interface {
 	//net.Conn
 	Read(p []byte) (int, error)
 	Write(p []byte) (int, error)
+	LocalAddr() net.Addr
+	RemoteAddr() net.Addr
 	//Flush() error
 }
 
@@ -74,6 +76,14 @@ func (c *conn) Write(p []byte) (int, error) {
 	n := copy(dst, p)
 
 	return n, nil
+}
+
+func (c *conn) LocalAddr() net.Addr {
+	return c.localAddr
+}
+
+func (c *conn) RemoteAddr() net.Addr {
+	return c.remoteAddr
 }
 
 func (c *conn) handleEvents(_ int, ev uint32) error {
