@@ -13,6 +13,7 @@ type Conn interface {
 	LocalAddr() net.Addr
 	RemoteAddr() net.Addr
 	//Flush() error
+	Close() error
 }
 
 type conn struct {
