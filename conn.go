@@ -108,6 +108,7 @@ func (c *conn) Close() error {
 	return c.el.closeConn(c)
 }
 
+// ID 返回fd作为conn的id
 func (c *conn) ID() int {
 	return c.fd
 }
