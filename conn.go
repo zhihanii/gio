@@ -8,7 +8,7 @@ import (
 
 type Conn interface {
 	net.Conn
-	FD() int
+	ID() int
 }
 
 type conn struct {
@@ -108,6 +108,6 @@ func (c *conn) Close() error {
 	return c.el.closeConn(c)
 }
 
-func (c *conn) FD() int {
+func (c *conn) ID() int {
 	return c.fd
 }
