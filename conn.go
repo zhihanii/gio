@@ -8,6 +8,7 @@ import (
 
 type Conn interface {
 	net.Conn
+	FD() int
 }
 
 type conn struct {
@@ -105,4 +106,8 @@ func (c *conn) SetWriteDeadline(t time.Time) error {
 
 func (c *conn) Close() error {
 	return c.el.closeConn(c)
+}
+
+func (c *conn) FD() int {
+	return c.fd
 }
