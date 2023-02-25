@@ -33,6 +33,7 @@ func (p *Poller) Poll(callback func(fd int, e uint32) error) error {
 
 	msec := -1
 	for {
+		//等待网络事件
 		n, err := unix.EpollWait(p.fd, el.events, msec)
 		if n == 0 || (n < 0 && err == unix.EINTR) {
 			msec = -1
