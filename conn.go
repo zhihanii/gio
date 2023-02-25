@@ -7,13 +7,7 @@ import (
 )
 
 type Conn interface {
-	//net.Conn
-	Read(p []byte) (int, error)
-	Write(p []byte) (int, error)
-	LocalAddr() net.Addr
-	RemoteAddr() net.Addr
-	//Flush() error
-	Close() error
+	net.Conn
 }
 
 type conn struct {
@@ -94,6 +88,18 @@ func (c *conn) handleEvents(_ int, ev uint32) error {
 	if ev&InEvents != 0 {
 		return c.el.onRead(c)
 	}
+	return nil
+}
+
+func (c *conn) SetDeadline(t time.Time) error {
+	return nil
+}
+
+func (c *conn) SetReadDeadline(t time.Time) error {
+	return nil
+}
+
+func (c *conn) SetWriteDeadline(t time.Time) error {
 	return nil
 }
 
