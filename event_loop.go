@@ -68,6 +68,7 @@ func (el *eventLoop) onConnect(c *conn) error {
 	if err = el.poller.AddReadWrite(c.pollAttachment); err != nil {
 		return err
 	}
+	c.opened = true
 	el.connections[c.fd] = c
 	return el.eh.OnConnect(el.ctx, c)
 }
@@ -150,6 +151,8 @@ func (el *eventLoop) closeConn(c *conn) error {
 	}
 
 	delete(el.connections, c.fd)
+	el.eh.OnClose(c, err)
+	c.releaseTCP()
 
 	return err
 }

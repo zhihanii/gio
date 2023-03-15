@@ -8,11 +8,14 @@ import (
 
 type Conn interface {
 	net.Conn
+	IsActive() bool
 	ID() int
 }
 
 type conn struct {
 	locker
+
+	opened bool
 
 	el *eventLoop
 
@@ -105,7 +108,31 @@ func (c *conn) SetWriteDeadline(t time.Time) error {
 }
 
 func (c *conn) Close() error {
+	//if c.el != nil {
+	//
+	//}
+	//err := unix.Close(c.fd)
+	//if err != nil {
+	//	err = fmt.Errorf("failed to close fd=%d in event-loop: %v", c.fd, os.NewSyscallError("close", err))
+	//	if err != nil {
+	//		err = errors.New(err.Error() + " & " + err.Error())
+	//	}
+	//}
+	//c.releaseTCP()
+	//return err
 	return c.el.closeConn(c)
+}
+
+func (c *conn) releaseTCP() {
+	c.opened = false
+	c.peer = nil
+	_ = c.inBuf.Release()
+	_ = c.outBuf.Release()
+	c.pollAttachment = nil
+}
+
+func (c *conn) IsActive() bool {
+	return c.opened
 }
 
 // ID 返回fd作为conn的id
